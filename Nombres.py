@@ -50,7 +50,7 @@ class DobleCircular():
                 #print(temp.valor)                  #print the las element in order to avoid [1->2->3->]-
             print(temp.valor)                                   #-the last link pointing tu None (null
 
-    def generate_graphviz(self):
+    def reportes_user(self):
         if self.primero is None:               
             print('The list is empty')     
         else:
@@ -78,11 +78,11 @@ class DobleCircular():
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
 
 
-
+"""
 nombres = DobleCircular()
 nombres.insertarFinal("Jose")
 nombres.insertarFinal("Jose1")
 nombres.insertarFinal("Jose2")
 nombres.print_list()
-
-nombres.generate_graphviz()
+nombres.reportes_user()
+"""

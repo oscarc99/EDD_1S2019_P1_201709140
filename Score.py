@@ -62,7 +62,7 @@ class ColaScore():
                 #print(temp.Name+" "+ str(temp.Score))             #print the las element in order to avoid [1->2->3->]-
             #-the last link pointing tu None (null)
 
-    def generate_graphviz(self):
+    def reportes_SCOREBOARD(self):
         if self.inicio is None:               
             print('The list is empty')     
         else:
@@ -85,7 +85,7 @@ class ColaScore():
             url2 = 'Rregistro.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
 
-
+"""
 Puntos = ColaScore()
 Puntos.agregar("Juan", 1)
 Puntos.agregar("Juan", 2)
@@ -100,5 +100,5 @@ Puntos.agregar("Juan", 10)
 Puntos.agregar("Juan", 11)
 #Puntos.agregar("Mario", 25)
 Puntos.print_list()
-Puntos.generate_graphviz()
-
+Puntos.reportes_boardscore()
+"""

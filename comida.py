@@ -7,16 +7,11 @@ pypath =os.path.dirname(os.path.abspath(__file__)) #Path relativo del archivo .p
 class NodoComida():
     #Nodo para el score (pila)
     def __init__(self,x,y):
-        com = posicion(x,y)
+        
         self.x=x
         self.y=y
-        self.pos = com
+        
         self.siguiente = None
-
-class posicion():
-    def __init__(self,x,y):
-        self.x=x
-        self.y=y
 
     def getX(self):
         return self.x
@@ -63,7 +58,7 @@ class PilaComida():
                 #print(temp.valor)                  #print the las element in order to avoid [1->2->3->]-
             print(str(temp.x)+"En X "+str (temp.y)) 
     
-    def generate_graphviz(self):
+    def reportes_comida(self):
         if self.arriba is None:               
             print('The list is empty')     
         else:
@@ -86,6 +81,7 @@ class PilaComida():
             url2 = 'Rpuntos.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
 
+"""
 puntos = PilaComida()
 puntos.comer(1,1)
 puntos.comer(2,2)
@@ -93,4 +89,5 @@ puntos.comer(3,3)
 puntos.comer(4,4)
 puntos.comer(5,5)
 puntos.print_list()
-puntos.generate_graphviz()
+puntos.reportes_comida()
+"""

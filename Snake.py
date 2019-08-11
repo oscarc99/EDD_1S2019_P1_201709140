@@ -2,28 +2,16 @@ import os
 import subprocess
 import pydot
 
-pypath =os.path.dirname(os.path.abspath(__file__)) #Path relativo del archivo .py
+#Path relativo del archivo .py
+pypath =os.path.dirname(os.path.abspath(__file__)) 
 
 class NodoSerpiente():
     #Nodo para la serpiente, (lista enlazada doble)
     def  __init__(self,posicionX, posicionY):
-        sna = posicion(posicionX, posicionY)
         self.posiX = posicionX
         self.posiY = posicionY
-        self.pos=sna
         self.siguient = None
         self.anterio = None
-
-class posicion():
-    def __init__(self,x,y):
-        self.x=x
-        self.y=y
-
-    def getX(self):
-        return self.x
-
-    def getY(self):
-        return self.y
 
 class ListaDobleSnake():
     #Motodo crear lista doble del snake
@@ -31,10 +19,10 @@ class ListaDobleSnake():
         self.primero = None
         self.ultimo = None
         self.tamaño = 0
-
-    def getTamaña(self):
+    #Devuelve el tamaño de la lista
+    def getTamaño(self):
         return self.tamaño
-
+    #Inserta al final de la lista
     def insertar_final(self,valorX, valorY):
         nuevo = NodoSerpiente(valorX,valorY)
         if self.tamaño==0:
@@ -47,14 +35,14 @@ class ListaDobleSnake():
            nuevo.anterio=self.ultimo
            self.ultimo=nuevo
         self.tamaño = self.tamaño + 1
-          
+    #Elimina el ultimo elemento de la lista      
     def eliminarUltimo(self):
         self.tamaño=self.tamaño-1
         temporal = self.primero #aputan para ir recorriendo
         while(temporal.siguient != self.ultimo):
             temporal.siguient=None
             self.ultimo=temporal
-
+    #Imprime los elementos de la lista
     def print_list(self):
         if self.tamaño ==0:               #verify if our LinkedList is empty
             print('The list is empty')      #print a warning
@@ -65,9 +53,9 @@ class ListaDobleSnake():
                 #print('->',end='')
                 temp = temp.siguient
                 #print(temp.valor)                  #print the las element in order to avoid [1->2->3->]-
-            print(str(temp.posiX)+"En X "+str (temp.posiY)) 
-
-    def generate_graphviz(self):
+            print(str(temp.posiX)+","+str (temp.posiY)) 
+    #Genera imagen de nodos de snake
+    def reportes_snake(self):
         if self.primero is None:               
             print('The list is empty')     
         else:
@@ -90,6 +78,8 @@ class ListaDobleSnake():
             url2 = 'Rsnake.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
 
+"""
+#Pruebas            
 snake = ListaDobleSnake()
 snake.insertar_final(1,1)
 snake.insertar_final(2,2)
@@ -97,4 +87,5 @@ snake.insertar_final(3,3)
 snake.insertar_final(4,4)
 snake.insertar_final(5,5)
 snake.print_list()
-snake.generate_graphviz()
+snake.reportes_snake()
+"""
