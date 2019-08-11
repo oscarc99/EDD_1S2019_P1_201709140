@@ -1,13 +1,15 @@
 digraph G{
 node [shape=record];
 rankdir=UD;
-node0 [label="55,5"];
+node0 [label="11,11"];
 node0 -> node1;
-node1 [label="44,4"];
+node1 [label="10,10"];
 node1 -> node2;
-node2 [label="33,3"];
+node2 [label="9,9"];
 node2 -> node3;
-node3 [label="22,2"];
+node3 [label="8,8"];
 node3 -> node4;
-node4 [label="11,1"];
+node4 [label="7,7"];
+node4 -> node5;
+node5 [label="6,6"];
 }

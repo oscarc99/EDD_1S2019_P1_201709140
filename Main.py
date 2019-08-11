@@ -83,6 +83,7 @@ class ListaDobleSnake():
             url1 = 'snake.dot'
             url2 = 'Rsnake.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
+            os.system('Rsnake.png')
 
 #Pruebas  snake
 """
@@ -177,6 +178,8 @@ class PilaComida():
             url1 = 'puntos.dot'
             url2 = 'Rpuntos.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
+            os.system('Rpuntos.png')            
+ 
 """
 print("PRUEBAS PILA COMIDA")
 puntos = PilaComida()
@@ -282,6 +285,7 @@ class ColaScore():
             url1 = 'registro.dot'
             url2 = 'Rregistro.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
+            os.system('Rregistro.png')
 
 
 
@@ -366,6 +370,7 @@ class DobleCircular():
             url1 = 'nombres.dot'
             url2 = 'Rnombres.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
+            os.system('Rnombres.png')
 """
 nombres = DobleCircular()
 nombres.insertarFinal("Jose")
@@ -383,6 +388,7 @@ puntos = ColaScore()
 comida = PilaComida()
 snake = ListaDobleSnake()
 #Ingresos de prueba
+#Scoreboard
 puntos.agregar("Juan", 1)
 puntos.agregar("Juan", 2)
 puntos.agregar("Juan", 3)
@@ -393,6 +399,25 @@ puntos.agregar("Juan", 7)
 puntos.agregar("Juan", 8)
 puntos.agregar("Juan", 9)
 puntos.agregar("Juan", 10)
+#Snake
+snake.insertar_final(1,1)
+snake.insertar_final(2,2)
+snake.insertar_final(3,3)
+snake.insertar_final(4,4)
+snake.insertar_final(5,5)
+#comoda
+comida.comer(6,6)
+comida.comer(7,7)
+comida.comer(8,8)
+comida.comer(9,9)
+comida.comer(10,10)
+comida.comer(11,11)
+#Names
+nombres.insertarFinal("Andres")
+nombres.insertarFinal("B")
+nombres.insertarFinal("C")
+nombres.insertarFinal("D")
+nombres.insertarFinal("E")
 #Metodos JUEGO COMPLETO
 def paint_menu(win):
     paint_title(win,' MENU  PRINCIPAL')          #paint title
@@ -417,11 +442,40 @@ def paint_scoreboard(win):
         pY+=1   
         
         temp = temp.getSig()
-       
-    win.timeout(-1)   
+    
+    win.timeout(-1)  
 
 def paint_report(win):
+    paint_title(win,' REPORTS')          #paint title
+    win.addstr(8,21, '1. SNAKE REPORT')            
+    win.addstr(9,21, '2. SCORE REPORT') 
+    win.addstr(10,21,'3. SCOREBOARD REPORT') 
+    win.addstr(11,21,'4. USERS REPORT') 
+    menu_report(window)
     
+    
+def menu_report(win):
+    keystroke = -1
+    while(keystroke==-1):
+        keystroke = window.getch()  #get current key being pressed
+        if(keystroke==49): #1
+            snake.reportes_snake()
+            
+        elif(keystroke==50):#2
+            comida.reportes_comida()
+            
+        elif(keystroke==51):#3
+            puntos.reportes_SCOREBOARD()
+            
+        elif(keystroke==52):#4
+            nombres.reportes_user()
+            
+        else:
+
+            pass
+    
+    
+
 
 def paint_title(win,var):
     win.clear()                         #it's important to clear the screen because of new functionality everytime we call this function
@@ -458,12 +512,14 @@ while(keystroke==-1):
         keystroke=-1
     elif(keystroke==51):
         paint_title(window, ' USER SELECTION ')
+        
         wait_esc(window)
         paint_menu(window)
         keystroke=-1
     elif(keystroke==52):
         paint_title(window, ' REPORTS ')
-
+        paint_report(window)
+        
         wait_esc(window)
         paint_menu(window)
         keystroke=-1

@@ -1,0 +1,19 @@
+digraph G{
+node [shape=record];
+rankdir=LR;
+node0 -> node4;
+node4 -> node0;
+node0 [label="Andres"];
+node0 -> node1;
+node1 -> node0;
+node1 [label="B"];
+node1 -> node2;
+node2 -> node1;
+node2 [label="C"];
+node2 -> node3;
+node3 -> node2;
+node3 [label="D"];
+node3 -> node4;
+node4 -> node3;
+node4 [label="E"];
+}
