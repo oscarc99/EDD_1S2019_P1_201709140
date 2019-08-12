@@ -2,6 +2,10 @@ import curses
 import time
 import os
 import subprocess
+from random import randint
+import curses.textpad
+from curses import textpad
+
 from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN #import special KEYS from the curses library
 #Path relativo
 pypath =os.path.dirname(os.path.abspath(__file__)) 
@@ -14,7 +18,7 @@ class NodoSerpiente():
         self.siguient = None
         self.anterio = None
 
-class ListaDobleSnake():
+class ListaDobleSnake(): 
     #Motodo crear lista doble del snake
     def __init__(self):
         self.primero = None
@@ -303,6 +307,15 @@ class NodoDoble():
         self.siguiente = None
         self.anterior = None
         self.valor = valor
+    
+    def getSig(self):
+        return self.siguiente
+
+    def getAntes(self):
+        return self.anterior
+
+    def getValor(self):
+        return self.valor
 
 class DobleCircular():
 
@@ -313,7 +326,10 @@ class DobleCircular():
 
     def estaVacia(self):
         return self.size==0
-
+    
+    def getInicio(self):
+        return self.primero
+    
     def getTamaña(self):
         return self.size
     
@@ -379,6 +395,8 @@ nombres.insertarFinal("Jose2")
 nombres.print_list()
 nombres.reportes_user()
 """
+
+
 #Variables utilizadas en el juego
 user=None
 pts=None
@@ -413,7 +431,7 @@ comida.comer(9,9)
 comida.comer(10,10)
 comida.comer(11,11)
 #Names
-nombres.insertarFinal("Andres")
+nombres.insertarFinal("A")
 nombres.insertarFinal("B")
 nombres.insertarFinal("C")
 nombres.insertarFinal("D")
@@ -427,7 +445,70 @@ def paint_menu(win):
     win.addstr(10,21, '4. Reports')         
     win.addstr(11,21, '5. Bulk Loading')    
     win.addstr(12,21, '6. Exit')            
-    win.timeout(-1)                         #wait for  an input thru the getch() function
+    win.timeout(-1)                         #wait for  an input thru t5he getch() function
+
+def paint_carga(win):
+    paint_title(win,'CARGA MASIVA') 
+    win.addstr(5,18, 'Ingrese nombre del archivo')
+    #win = curses.newwin(5, 60, 5, 10)
+    salida = setup_input()
+    win.addstr(10,18, salida)
+    archivo(win,salida)
+    
+def setup_input():
+    inp = curses.newwin(8,55, 0,0)
+    inp.addstr(1,1, "Ingrese nombre del archivo:")
+    sub = inp.subwin(3, 41, 2, 1)
+    sub.border()
+    sub2 = sub.subwin(1, 40, 3, 2)
+    tb = curses.textpad.Textbox(sub2)
+    inp.refresh()
+    tb.edit()
+    return tb.gather()
+
+def archivo(win,text):
+    
+    try:
+        f = open(text,'r')
+        mensaje = f.read()
+        f.close()
+        
+
+    except:
+        print("No se pudo cargar archivo")    
+    
+        print(mensaje)
+    x=mensaje.split("\n")
+    
+    for i in x:
+        nombres.insertarFinal(i)
+        print("Esto  --> "+i)
+    
+def paint_users(win):
+    paint_title(win,'USERS')          #paint title
+    win.addstr(5,18, 'Press enter to select')
+    temp = nombres.getInicio()
+    key = KEY_RIGHT         #key defaulted to KEY_RIGHT
+    while key != 27:                #run program while [ESC] key is not pressed
+        keystroke = window.getch()  #get current key being pressed
+        if keystroke is not  -1:    #key is pressed
+            key = keystroke         #key direction changes
+            
+        if key == KEY_RIGHT:                #right direction
+            temp= temp.getSig()             
+            win.addstr(15,18, '<----- {} ----->'.format(temp.getValor()))
+        elif key == KEY_LEFT:               #left direction
+            temp=temp.getAntes()
+            win.addstr(15,18, '<----- {} ----->'.format(temp.getValor()))
+        elif key == 10:
+            user = temp.getValor()
+            print(user)
+            pass
+            
+            
+            
+        else:
+            print("")
 
 def paint_scoreboard(win):
     paint_title(win,'SCOREBOARD')          #paint title
@@ -459,22 +540,34 @@ def menu_report(win):
     while(keystroke==-1):
         keystroke = window.getch()  #get current key being pressed
         if(keystroke==49): #1
-            snake.reportes_snake()
-            
+            try:
+                snake.reportes_snake()
+            except:
+                print("Error en el reportes snake")
         elif(keystroke==50):#2
-            comida.reportes_comida()
+            try:
+                comida.reportes_comida()
+            except:
+                print("Error en el reportes snake")
+            
             
         elif(keystroke==51):#3
-            puntos.reportes_SCOREBOARD()
             
+            try:
+                puntos.reportes_SCOREBOARD()
+            except:
+                print("Error en el reportes snake")
         elif(keystroke==52):#4
-            nombres.reportes_user()
             
+            try:
+                nombres.reportes_user()
+            except:
+                print("Error en el reportes snake")
         else:
 
             pass
     
-    
+
 
 
 def paint_title(win,var):
@@ -489,8 +582,37 @@ def wait_esc(win):
         key = window.getch()
 
 
+
+
+def play(win):
+    
+    
+    key = KEY_RIGHT         #key defaulted to KEY_RIGHT
+    pos_x = 5               #initial x position
+    pos_y = 5               #initial y position
+    window.addch(pos_y,pos_x,'o')   #print initial dot
+    while key != 27:                #run program while [ESC] key is not pressed
+        window.timeout(200)         #delay of 100 milliseconds
+        keystroke = window.getch()  #get current key being pressed
+        if keystroke is not  -1:    #key is pressed
+            key = keystroke         #key direction changes
+    
+        window.addch(pos_y,pos_x,' ')       #erase last dot
+        if key == KEY_RIGHT:                #right direction
+            pos_x = pos_x + 1               #pos_x increase
+        elif key == KEY_LEFT:               #left direction
+            pos_x = pos_x - 1               #pos_x decrease
+        elif key == KEY_UP:                 #up direction
+            pos_y = pos_y - 1               #pos_y decrease
+        elif key == KEY_DOWN:               #down direction
+            pos_y = pos_y + 1               #pos_y increase
+        window.addch(pos_y,pos_x,'o')       #draw new dot
+    
+
+ 
+
 stdscr = curses.initscr() #initialize console
-window = curses.newwin(20,60,0,0) #create a new curses window
+window = curses.newwin(20,70,0,0) #create a new curses window
 window.keypad(True)     #enable Keypad mode
 curses.noecho()         #prevent input from displaying in the screen1
 curses.curs_set(0)      #cursor invisible (0)
@@ -501,23 +623,26 @@ while(keystroke==-1):
     keystroke = window.getch()  #get current key being pressed
     if(keystroke==49): #1
         paint_title(window, ' PLAY ')
+        play(window)
         wait_esc(window)
         paint_menu(window)
         keystroke=-1
     elif(keystroke==50):
         paint_title(window, ' SCOREBOARD ')
         paint_scoreboard(window)
+
         wait_esc(window)
         paint_menu(window)
         keystroke=-1
     elif(keystroke==51):
         paint_title(window, ' USER SELECTION ')
-        
+        paint_users(window)
         wait_esc(window)
         paint_menu(window)
         keystroke=-1
     elif(keystroke==52):
         paint_title(window, ' REPORTS ')
+        
         paint_report(window)
         
         wait_esc(window)
@@ -525,6 +650,7 @@ while(keystroke==-1):
         keystroke=-1
     elif(keystroke==53):
         paint_title(window,' BULK LOADING ')
+        paint_carga(window)
         wait_esc(window)
         paint_menu(window)
         keystroke=-1
