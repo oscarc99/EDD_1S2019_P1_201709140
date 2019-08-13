@@ -23,37 +23,40 @@ class ListaDobleSnake():
     def getTamaño(self):
         return self.tamaño
     #Inserta al final de la lista
-    def insertar_final(self,valorX, valorY):
+    def insertar_inicio(self,valorX, valorY):
         nuevo = NodoSerpiente(valorX,valorY)
         if self.tamaño==0:
             self.primero = nuevo
             self.ultimo = nuevo
-            self.primero.anterio = self.ultimo
-            self.primero.siguient = self.primero
         else:
-           self.ultimo.siguient=nuevo
-           nuevo.anterio=self.ultimo
-           self.ultimo=nuevo
+           self.primero.siguient=nuevo
+           nuevo.anterio=self.primero
+           self.primero=nuevo
+
         self.tamaño = self.tamaño + 1
+
     #Elimina el ultimo elemento de la lista      
     def eliminarUltimo(self):
-        self.tamaño=self.tamaño-1
-        temporal = self.primero #aputan para ir recorriendo
-        while(temporal.siguient != self.ultimo):
-            temporal.siguient=None
-            self.ultimo=temporal
+        if self.tamaño==0:
+            print("Lista vacia")
+        else:
+            temp = self.ultimo.siguient
+            temp.anterio=None
+            self.ultimo=temp
+        self.tamaño -=1
+
     #Imprime los elementos de la lista
     def print_list(self):
         if self.tamaño ==0:               #verify if our LinkedList is empty
             print('The list is empty')      #print a warning
         else:
-            temp = self.primero
-            while temp is not self.ultimo:    #iterate our list printing each element-
+            temp = self.ultimo
+            while temp is not None:    #iterate our list printing each element-
                 print(str(temp.posiX)+","+str (temp.posiY))       #-as we go
                 #print('->',end='')
                 temp = temp.siguient
                 #print(temp.valor)                  #print the las element in order to avoid [1->2->3->]-
-            print(str(temp.posiX)+","+str (temp.posiY)) 
+            
     #Genera imagen de nodos de snake
     def reportes_snake(self):
         if self.primero is None:               
@@ -63,7 +66,7 @@ class ListaDobleSnake():
             f.write('digraph G{\n')
             f.write('node [shape=record];\n')
             f.write('rankdir=LR;\n')
-            temp = self.primero
+            temp = self.ultimo
             count = 0
             while temp.siguient is not None:
                 f.write('node{} [label=\"{}\"];\n'.format(str(count),str(temp.posiX)+","+str(temp.posiY)))
@@ -77,15 +80,59 @@ class ListaDobleSnake():
             url1 = 'snake.dot'
             url2 = 'Rsnake.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
+            os.system(url2)
 
-"""
+    def limpiar_snake(self):
+        self.primero=None
+        self.ultimo=None
+        self.tamaño=0
+
+    def mover_abajo(self):
+        #Inserto al incio
+        X = self.primero.posiX
+        Y = self.primero.posiY+1
+        self.insertar_inicio(X,Y)
+        #Elimino el ultimo
+        self.eliminarUltimo()
+        
+
+    def mover_arriba(self):
+        #Inserto al incio
+        X = self.primero.posiX
+        Y = self.primero.posiY-1
+        self.insertar_inicio(X,Y)
+        #Elimino el ultimo
+        self.eliminarUltimo()
+        
+
+    def mover_iz(self):
+        #Inserto al incio
+        X = self.primero.posiX-1
+        Y = self.primero.posiY
+        self.insertar_inicio(X,Y)
+        #Elimino el ultimo
+        self.eliminarUltimo()
+        
+
+    def mover_der(self):
+        #Inserto al incio
+        X = self.primero.posiX+1
+        Y = self.primero.posiY
+        self.insertar_inicio(X,Y)
+        #Elimino el ultimo
+        self.eliminarUltimo()
+        
+
+
+
 #Pruebas            
 snake = ListaDobleSnake()
-snake.insertar_final(1,1)
-snake.insertar_final(2,2)
-snake.insertar_final(3,3)
-snake.insertar_final(4,4)
-snake.insertar_final(5,5)
+snake.insertar_inicio(11,3)
+snake.insertar_inicio(12,3)
+snake.insertar_inicio(13,3)
+snake.insertar_inicio(14,3)
+snake.insertar_inicio(15,3)
+snake.mover_der()
+snake.mover_arriba()
 snake.print_list()
 snake.reportes_snake()
-"""

@@ -18,7 +18,7 @@ class NodoSerpiente():
         self.siguient = None
         self.anterio = None
 
-class ListaDobleSnake(): 
+class ListaDobleSnake():
     #Motodo crear lista doble del snake
     def __init__(self):
         self.primero = None
@@ -27,43 +27,56 @@ class ListaDobleSnake():
     #Devuelve el tamaño de la lista
     def getTamaño(self):
         return self.tamaño
-    #Inserta al final de la lista
-    def insertar_final(self,valorX, valorY):
+    #Insertar final
+    def insertar_final(self, valorx, valory):
+        nuevo= NodoSerpiente(valorx,valory)
+        if self.tamaño==0:
+            self.primero = nuevo
+            self.ultimo = nuevo
+        else:
+            self.ultimo.anterio=nuevo
+            nuevo.siguient=self.ultimo
+            self.ultimo=nuevo
+
+    #Inserta al inici de la lista
+    def insertar_inicio(self,valorX, valorY):
         nuevo = NodoSerpiente(valorX,valorY)
         if self.tamaño==0:
             self.primero = nuevo
             self.ultimo = nuevo
-            self.primero.anterio = self.ultimo
-            self.primero.siguient = self.primero
         else:
-           self.ultimo.siguient=nuevo
-           nuevo.anterio=self.ultimo
-           self.ultimo=nuevo
+           self.primero.siguient=nuevo
+           nuevo.anterio=self.primero
+           self.primero=nuevo
+
         self.tamaño = self.tamaño + 1
+
     #Elimina el ultimo elemento de la lista      
     def eliminarUltimo(self):
-        self.tamaño=self.tamaño-1
-        temporal = self.primero #aputan para ir recorriendo
-        while(temporal.siguient != self.ultimo):
-            temporal.siguient=None
-            self.ultimo=temporal
-    #Limpia la lista de la serpiente
-    def limpiar_snake(self):
-        self.primero=None
-        self.ultimo=None
-        self.tamaño=0
+        if self.tamaño==0:
+            print("Lista vacia")
+        else:
+            x = self.ultimo.posiX
+            y = self.ultimo.posiY
+            
+            temp = self.ultimo.siguient
+            temp.anterio=None
+            self.ultimo=temp
+        self.tamaño -=1
+        return x,y
+
     #Imprime los elementos de la lista
     def print_list(self):
         if self.tamaño ==0:               #verify if our LinkedList is empty
             print('The list is empty')      #print a warning
         else:
-            temp = self.primero
-            while temp is not self.ultimo:    #iterate our list printing each element-
+            temp = self.ultimo
+            while temp is not None:    #iterate our list printing each element-
                 print(str(temp.posiX)+","+str (temp.posiY))       #-as we go
                 #print('->',end='')
                 temp = temp.siguient
                 #print(temp.valor)                  #print the las element in order to avoid [1->2->3->]-
-            print(str(temp.posiX)+","+str (temp.posiY)) 
+            
     #Genera imagen de nodos de snake
     def reportes_snake(self):
         if self.primero is None:               
@@ -73,7 +86,7 @@ class ListaDobleSnake():
             f.write('digraph G{\n')
             f.write('node [shape=record];\n')
             f.write('rankdir=LR;\n')
-            temp = self.primero
+            temp = self.ultimo
             count = 0
             while temp.siguient is not None:
                 f.write('node{} [label=\"{}\"];\n'.format(str(count),str(temp.posiX)+","+str(temp.posiY)))
@@ -87,7 +100,90 @@ class ListaDobleSnake():
             url1 = 'snake.dot'
             url2 = 'Rsnake.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
-            os.system('Rsnake.png')
+            os.system(url2)
+
+    def limpiar_snake(self):
+        self.primero=None
+        self.ultimo=None
+        self.tamaño=0
+
+    def mover_abajo(self):
+        #Inserto al incio
+        X = self.primero.posiX
+        Y = self.primero.posiY+1
+        
+        if X >68: 
+            X= 2
+        if Y >18:
+            Y=2
+        if X<2:
+            X=68
+        if Y<2:
+            Y=18
+        self.insertar_inicio(X,Y)
+        #Elimino el ultimo
+        self.eliminarUltimo()
+        
+    def mover_arriba(self):
+        #Inserto al incio
+        X = self.primero.posiX
+        Y = self.primero.posiY-1
+        if X >68: 
+            X= 2
+        if Y >18:
+            Y=2
+        if X<2:
+            X=68
+        if Y<2:
+            Y=18
+        self.insertar_inicio(X,Y)
+        #Elimino el ultimo
+        self.eliminarUltimo()
+        
+    def mover_iz(self):
+        #Inserto al incio
+        X = self.primero.posiX-1
+        Y = self.primero.posiY
+        if X >68: 
+            X= 2
+        if Y >18:
+            Y=2
+        if X<2:
+            X=68
+        if Y<2:
+            Y=18
+        self.insertar_inicio(X,Y)
+        #Elimino el ultimo
+        self.eliminarUltimo()
+    
+    def mover_der(self):
+        #Inserto al incio
+        X = self.primero.posiX+1
+        Y = self.primero.posiY
+        if X >68: 
+            X= 2
+        if Y >18:
+            Y=2
+        if X<2:
+            X=68
+        if Y<2:
+            Y=18
+        self.insertar_inicio(X,Y)
+        #Elimino el ultimo
+        self.eliminarUltimo()
+     
+    
+    #Verifica no existe 
+    def repite(self):
+        firts = self.primero
+        temp = self.ultimo
+        while temp.siguient is not None:
+            if firts.posiY == temp.posiY and firts.posiX == temp.posiX:
+                return True
+            temp = temp.siguient
+        return False
+
+   
 
 #Pruebas  snake
 """
@@ -100,6 +196,7 @@ snake.insertar_final(4,4)
 snake.insertar_final(5,5)
 snake.print_list()
 snake.reportes_snake()
+print(str(snake.repite(2,15)))
 """
 #Metodos pila score(puntos en juego/comida) 
 class NodoComida():
@@ -183,7 +280,30 @@ class PilaComida():
             url2 = 'Rpuntos.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
             os.system('Rpuntos.png')            
- 
+                
+    def graficar(self):
+        if self.arriba is None:               
+            print('The list is empty')   
+        else:
+            f= open(pypath+'\\comida.dot',"w")
+            temp = self.arriba
+            f.write('digraph G{\n')
+            f.write('node [shape = record];\n')
+            
+            f.write('2[label=\"{')
+            while temp.siguiente is not None:
+                f.write('({},{})'.format(temp.x,temp.y))
+                f.write('|')
+                temp= temp.siguiente
+            f.write('({},{})'.format(temp.x,temp.y))
+            f.write("}\"]}")
+        
+            
+            f.close()
+            url1 = 'comida.dot'
+            url2 = 'Rcomida.jpg'
+            os.system('dot {} -Tjpg -o {}'.format(url1,url2))
+            os.system(url2)
 """
 print("PRUEBAS PILA COMIDA")
 puntos = PilaComida()
@@ -211,8 +331,7 @@ class NodoScore():
 
     def getScore(self):
         return self.Score
-
-        
+       
 class ColaScore():
     #Metodo constructior pila
     def __init__(self):
@@ -274,13 +393,13 @@ class ColaScore():
             f = open(pypath+'\\registro.dot','w')
             f.write('digraph G{\n')
             f.write('node [shape=record];\n')
-            f.write('rankdir=UD;\n')
+            f.write('rankdir=LR;\n')
             temp = self.inicio
             count = 0
             while temp.siguiente is not None:
                 f.write('node{} [label=\"{}\"];\n'.format(str(count),str(temp.Name)+","+str(temp.Score)))
                 count+=1
-                f.write('node{} -> node{};\n'.format(str(count-1),str(count)))
+                f.write('node{} -> node{};\n'.format(str(count),str(count-1)))
                 
                 temp = temp.siguiente
             f.write('node{} [label=\"{}\"];\n'.format(str(count),str(temp.Name)+","+str(temp.Score)))
@@ -290,8 +409,6 @@ class ColaScore():
             url2 = 'Rregistro.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
             os.system('Rregistro.png')
-
-
 
 """
 Puntos.agregar("Juan", 10)
@@ -396,10 +513,8 @@ nombres.print_list()
 nombres.reportes_user()
 """
 
-
 #Variables utilizadas en el juego
-user=None
-pts=None
+
 #Variables de las lista
 nombres = DobleCircular()
 puntos = ColaScore()
@@ -409,7 +524,7 @@ snake = ListaDobleSnake()
 #Scoreboard
 puntos.agregar("Juan", 1)
 puntos.agregar("Juan", 2)
-puntos.agregar("Juan", 3)
+puntos.agregar("Juan", 3) 
 puntos.agregar("Juan", 4)
 puntos.agregar("Juan", 5)
 puntos.agregar("Juan", 6)
@@ -417,12 +532,20 @@ puntos.agregar("Juan", 7)
 puntos.agregar("Juan", 8)
 puntos.agregar("Juan", 9)
 puntos.agregar("Juan", 10)
+
+snake = ListaDobleSnake()
+snake.insertar_inicio(5,4)
+snake.insertar_inicio(5,3)
+snake.insertar_inicio(5,2)
+"""
 #Snake
 snake.insertar_final(1,1)
 snake.insertar_final(2,2)
 snake.insertar_final(3,3)
 snake.insertar_final(4,4)
 snake.insertar_final(5,5)
+"""
+"""
 #comoda
 comida.comer(6,6)
 comida.comer(7,7)
@@ -430,12 +553,54 @@ comida.comer(8,8)
 comida.comer(9,9)
 comida.comer(10,10)
 comida.comer(11,11)
+"""
 #Names
 nombres.insertarFinal("A")
 nombres.insertarFinal("B")
 nombres.insertarFinal("C")
 nombres.insertarFinal("D")
 nombres.insertarFinal("E")
+#Comida suma puntos
+class Food(object):
+    def __init__(self, window, char='+'):
+        self.x = randint(2, 18)
+        self.y = randint(2, 68)
+        self.char = char
+        self.window = window
+    
+    def getXF(self):
+        return self.x
+    
+    def getYF(self):
+        return self.y
+    
+    def render(self):
+        self.window.addstr(self.y, self.x, self.char)
+        
+    def reset(self):
+        self.x = randint(2, 18)
+        self.y = randint(2, 68)
+#Comida resta puntos
+class Mala(object):
+    def __init__(self, window, char='*'):
+        self.x = randint(3, 18)
+        self.y = randint(3, 68)
+        self.char = char
+        self.window = window
+    
+    def getXF(self):
+        return self.x
+    
+    def getYF(self):
+        return self.y
+    
+    def render(self):
+        self.window.addstr(self.y, self.x, self.char)
+        
+    def reset(self):
+        self.x = randint(3, 15)
+        self.y = randint(3, 65)
+
 #Metodos JUEGO COMPLETO
 def paint_menu(win):
     paint_title(win,' MENU  PRINCIPAL')          #paint title
@@ -493,7 +658,7 @@ def paint_users(win):
         keystroke = window.getch()  #get current key being pressed
         if keystroke is not  -1:    #key is pressed
             key = keystroke         #key direction changes
-            
+
         if key == KEY_RIGHT:                #right direction
             temp= temp.getSig()             
             win.addstr(15,18, '<----- {} ----->'.format(temp.getValor()))
@@ -503,20 +668,15 @@ def paint_users(win):
         elif key == 10:
             user = temp.getValor()
             print(user)
-            pass
+            return user
             
-            
-            
-        else:
-            print("")
-
 def paint_scoreboard(win):
     paint_title(win,'SCOREBOARD')          #paint title
     win.addstr(5,18, 'Name')
     win.addstr(5,28, 'Score')            
     pY=7
     
-    temp = puntos.getInicio()
+    temp = puntos.inicio
     while temp is not None:
         win.addstr(pY,18,str(temp.getName()))
         win.addstr(pY,28,str(temp.getScore()))
@@ -534,7 +694,6 @@ def paint_report(win):
     win.addstr(11,21,'4. USERS REPORT') 
     menu_report(window)
     
-    
 def menu_report(win):
     keystroke = -1
     while(keystroke==-1):
@@ -546,7 +705,7 @@ def menu_report(win):
                 print("Error en el reportes snake")
         elif(keystroke==50):#2
             try:
-                comida.reportes_comida()
+                comida.graficar()
             except:
                 print("Error en el reportes snake")
             
@@ -566,9 +725,6 @@ def menu_report(win):
         else:
 
             pass
-    
-
-
 
 def paint_title(win,var):
     win.clear()                         #it's important to clear the screen because of new functionality everytime we call this function
@@ -581,36 +737,108 @@ def wait_esc(win):
     while key!=27:
         key = window.getch()
 
-
-
-
-def play(win):
-    
-    
+def play(win,pts,use):
+    win.addstr(1,1, 'Jugador: '+use)
+    food = Food(window,'+')
+    mala = Mala(window, '*')
+    com_x=food.x
+    com_y=food.y
+    mal_x = mala.x
+    mal_y = mala.y
+    window.addch(com_x,com_y,'+')
+    window.addch(mal_x,mal_y,'*')
     key = KEY_RIGHT         #key defaulted to KEY_RIGHT
-    pos_x = 5               #initial x position
-    pos_y = 5               #initial y position
-    window.addch(pos_y,pos_x,'o')   #print initial dot
+    
+    
+
+    time = 100
+    #window.addch(pos_y,pos_x,'0')   #print initial dot
     while key != 27:                #run program while [ESC] key is not pressed
-        window.timeout(200)         #delay of 100 milliseconds
+        ini = snake.ultimo
+        while ini is not None:
+            window.addch(ini.posiY,ini.posiX,'0')
+            ini = ini.siguient
+        
+        
+
+        win.addstr(1,15, 'Puntos: '+str(pts))
+        window.timeout(time)         #delay of 100 milliseconds
         keystroke = window.getch()  #get current key being pressed
         if keystroke is not  -1:    #key is pressed
             key = keystroke         #key direction changes
-    
-        window.addch(pos_y,pos_x,' ')       #erase last dot
+
+
+        last = snake.ultimo
+        window.addch(last.posiY,last.posiX,' ')
+        ini = snake.primero
+        
+        if food.x==ini.posiY and food.y ==ini.posiX:
+            pts +=1
+            snake.insertar_final(last.posiY,last.posiX)
+            comida.comer(food.x,food.y)
+            food.reset()
+            com_x=food.x
+            com_y=food.y
+            window.addch(com_x,com_y,'+')
+        if pts >0 and mal_x==ini.posiY and mal_y ==ini.posiX:
+                     
+            pts -=1
+            comida.delete()
+            snake.eliminarUltimo()
+            mala.reset()
+            mal_x=mala.x
+            mal_y=mala.y
+            window.addch(mal_x,mal_y,'*')
+        elif  mal_x==ini.posiY and mal_y ==ini.posiX:  
+            mala.reset()
+            mal_x=mala.x
+            mal_y=mala.y
+            window.addch(mal_x,mal_y,'*')
+                
+        
+        if snake.repite():
+            puntos.agregar(use,pts)
+            snake.limpiar_snake()
+            snake.insertar_inicio(5,4)
+            snake.insertar_inicio(5,3)
+            snake.insertar_inicio(5,2)
+            key = 27
+            
+        
+
+        if pts ==15: 
+           time = 60
+        """
+        ini = snake.primero
+        temp = snake.ultimo
+        while temp.siguient is not None:
+            if ini.posiX == temp.posiX and ini.posiY == temp.posiY:
+                print("Se termino el juego ")
+                break
+            temp= temp.siguient
+        """
+        
+
+        #window.addch(pos_y,pos_x,' ')       #erase last dot
         if key == KEY_RIGHT:                #right direction
-            pos_x = pos_x + 1               #pos_x increase
+            #pos_x = pos_x + 1               #pos_x increase
+            snake.mover_der()
         elif key == KEY_LEFT:               #left direction
-            pos_x = pos_x - 1               #pos_x decrease
+            #pos_x = pos_x - 1               #pos_x decrease
+            snake.mover_iz()
         elif key == KEY_UP:                 #up direction
-            pos_y = pos_y - 1               #pos_y decrease
+            #pos_y = pos_y - 1               #pos_y decrease
+            snake.mover_arriba()
         elif key == KEY_DOWN:               #down direction
-            pos_y = pos_y + 1               #pos_y increase
-        window.addch(pos_y,pos_x,'o')       #draw new dot
-    
-
- 
-
+            #pos_y = pos_y + 1               #pos_y increase
+            snake.mover_abajo()
+            
+        
+        #window.addch(pos_y,pos_x,'0')       #draw new dot
+        
+usuario=None
+pt=0         
+            
 stdscr = curses.initscr() #initialize console
 window = curses.newwin(20,70,0,0) #create a new curses window
 window.keypad(True)     #enable Keypad mode
@@ -622,9 +850,13 @@ keystroke = -1
 while(keystroke==-1):
     keystroke = window.getch()  #get current key being pressed
     if(keystroke==49): #1
+        
         paint_title(window, ' PLAY ')
-        play(window)
-        wait_esc(window)
+        if (usuario is "" or usuario is " " or usuario is None):
+            usuario= paint_users(window)
+        else:
+            play(window, pt, usuario)
+        
         paint_menu(window)
         keystroke=-1
     elif(keystroke==50):
@@ -636,7 +868,7 @@ while(keystroke==-1):
         keystroke=-1
     elif(keystroke==51):
         paint_title(window, ' USER SELECTION ')
-        paint_users(window)
+        usuario= paint_users(window)
         wait_esc(window)
         paint_menu(window)
         keystroke=-1
@@ -659,4 +891,7 @@ while(keystroke==-1):
     else:
         keystroke=-1
 
+
 curses.endwin() #return terminal to previous state
+
+

@@ -1,23 +1,23 @@
 digraph G{
 node [shape=record];
-rankdir=UD;
+rankdir=LR;
 node0 [label="Juan,1"];
-node0 -> node1;
+node1 -> node0;
 node1 [label="Juan,2"];
-node1 -> node2;
+node2 -> node1;
 node2 [label="Juan,3"];
-node2 -> node3;
+node3 -> node2;
 node3 [label="Juan,4"];
-node3 -> node4;
+node4 -> node3;
 node4 [label="Juan,5"];
-node4 -> node5;
+node5 -> node4;
 node5 [label="Juan,6"];
-node5 -> node6;
+node6 -> node5;
 node6 [label="Juan,7"];
-node6 -> node7;
+node7 -> node6;
 node7 [label="Juan,8"];
-node7 -> node8;
+node8 -> node7;
 node8 [label="Juan,9"];
-node8 -> node9;
+node9 -> node8;
 node9 [label="Juan,10"];
 }

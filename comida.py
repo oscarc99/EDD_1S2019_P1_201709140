@@ -80,8 +80,32 @@ class PilaComida():
             url1 = 'puntos.dot'
             url2 = 'Rpuntos.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
+            os.system(url2)
+    
+    def graficar(self):
+        if self.arriba is None:               
+            print('The list is empty')   
+        else:
+            f= open(pypath+'\\comida.dot',"w")
+            temp = self.arriba
+            f.write('digraph G{\n')
+            f.write('node [shape = record];\n')
+            
+            f.write('2[label=\"{')
+            while temp.siguiente is not None:
+                f.write('({},{})'.format(temp.x,temp.y))
+                f.write('|')
+                temp= temp.siguiente
+            f.write('({},{})'.format(temp.x,temp.y))
+            f.write("}\"]}")
+        
+            
+            f.close()
+            url1 = 'comida.dot'
+            url2 = 'Rcomida.jpg'
+            os.system('dot {} -Tjpg -o {}'.format(url1,url2))
+            os.system(url2)
 
-"""
 puntos = PilaComida()
 puntos.comer(1,1)
 puntos.comer(2,2)
@@ -89,5 +113,5 @@ puntos.comer(3,3)
 puntos.comer(4,4)
 puntos.comer(5,5)
 puntos.print_list()
-puntos.reportes_comida()
-"""
+#puntos.reportes_comida()
+puntos.graficar()

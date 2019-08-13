@@ -84,6 +84,9 @@ class ColaScore():
             url1 = 'registro.dot'
             url2 = 'Rregistro.png'
             os.system('dot {} -Tpng -o {}'.format(url1,url2))
+    
+    
+
 
 """
 Puntos = ColaScore()
