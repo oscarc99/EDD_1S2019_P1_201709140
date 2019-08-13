@@ -613,12 +613,15 @@ def paint_menu(win):
     win.timeout(-1)                         #wait for  an input thru t5he getch() function
 
 def paint_carga(win):
-    paint_title(win,'CARGA MASIVA') 
-    win.addstr(5,18, 'Ingrese nombre del archivo')
-    #win = curses.newwin(5, 60, 5, 10)
-    salida = setup_input()
-    win.addstr(10,18, salida)
-    archivo(win,salida)
+    try:
+        paint_title(win,'CARGA MASIVA') 
+        win.addstr(5,18, 'Ingrese nombre del archivo')
+        #win = curses.newwin(5, 60, 5, 10)
+        salida = setup_input()
+        win.addstr(10,18, salida)
+        archivo(win,salida)
+    except:
+        print("No se pudo")
     
 def setup_input():
     inp = curses.newwin(8,55, 0,0)
@@ -644,10 +647,13 @@ def archivo(win,text):
     
         print(mensaje)
     x=mensaje.split("\n")
+    try:
+        for i in x:
+            nombres.insertarFinal(i)
+    except:
+        print("No se pudo cargar archivo")    
     
-    for i in x:
-        nombres.insertarFinal(i)
-        print("Esto  --> "+i)
+        
     
 def paint_users(win):
     paint_title(win,'USERS')          #paint title
@@ -674,13 +680,13 @@ def paint_scoreboard(win):
     paint_title(win,'SCOREBOARD')          #paint title
     win.addstr(5,18, 'Name')
     win.addstr(5,28, 'Score')            
-    pY=7
+    pY=16
     
     temp = puntos.inicio
     while temp is not None:
         win.addstr(pY,18,str(temp.getName()))
         win.addstr(pY,28,str(temp.getScore()))
-        pY+=1   
+        pY-=1   
         
         temp = temp.getSig()
     
